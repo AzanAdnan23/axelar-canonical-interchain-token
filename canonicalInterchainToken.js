@@ -77,9 +77,10 @@ const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
 async function gasEstimator() {
   const gas = await api.estimateGasFee(
     EvmChain.AVALANCHE,
-    EvmChain.BASE_SEPOLIA,
-    1000000,
-    1.1
+    EvmChain.SEPOLIA,
+    700000,
+    1.1,
+    GasToken.AVAX
   );
 
   return gas;
@@ -105,7 +106,7 @@ async function deployRemoteCanonicalInterchainToken() {
     await interchainTokenFactoryContract.deployRemoteCanonicalInterchainToken(
       "Avalanche",
       customTokenAddress, // Your token address
-      "base-sepolia",
+      "ethereum-sepolia",
       gasAmount,
       { value: gasAmount }
     );
@@ -129,3 +130,18 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+//❯ FUNCTION_NAME=registerCanonicalInterchainToken npx hardhat run canonicalInterchainToken.js --network avalanche
+
+// Transaction Hash: 0x4edfdac3434cded01f993920775a6c9d64834a70233d20f00e4ca4d55a6941d1,
+// Token ID: 0xac9db86e8c7d50c0530a77cf5651193b5e91ffb2946692045be1bac7c89753b8,
+// Expected Token Manager Address: 0xf9575C0B8EE0eAFC9343Ef71f5d8392c8ab9cBAa,
+
+/// ------------------------------
+
+// FUNCTION_NAME=deployRemoteCanonicalInterchainToken npx hardhat run canonicalInterchainToken.js --network avalanche
+
+//Error: cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ]
+// reason: 'execution reverted',
+// code: 'UNPREDICTABLE_GAS_LIMIT',
+// method: 'estimateGas',
